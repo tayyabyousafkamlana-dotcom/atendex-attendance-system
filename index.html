@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atendex | Attendance made easy</title>
+    <meta
+      name="description"
+      content="Atendex helps schools and organizations manage attendance with speed, clarity, and real-time insights."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://kit.fontawesome.com/7d3f5d25ac.js" crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --bg: #f5f7fb;
+        --panel: #ffffff;
+        --panel-soft: #f8fafc;
+        --primary: #12263a;
+        --primary-2: #1b2d45;
+        --accent: #3b82f6;
+        --accent-2: #7c3aed;
+        --success: #22c55e;
+        --warning: #f59e0b;
+        --text: #0f172a;
+        --muted: #607089;
+        --line: #e7ecf4;
+        --shadow: 0 25px 60px rgba(15, 23, 42, 0.08);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 18%, #f7f8fb 100%);
+        color: var(--text);
+      }
+
+      a { text-decoration: none; color: inherit; }
+      img { max-width: 100%; display: block; }
+      button, input { font: inherit; }
+
+      .container {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(16px);
+        background: rgba(245, 247, 251, 0.7);
+        border-bottom: 1px solid rgba(127, 142, 167, 0.12);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 78px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        font-size: 1.35rem;
+      }
+
+      .brand-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        box-shadow: 0 12px 24px rgba(59, 130, 246, 0.25);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      .nav-links a:hover { color: var(--text); }
+
+      .nav-cta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border: none;
+        border-radius: 999px;
+        padding: 0.9rem 1.4rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn:hover { transform: translateY(-1px); }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        box-shadow: 0 18px 28px rgba(59, 130, 246, 0.22);
+      }
+      .btn-secondary {
+        background: white;
+        color: var(--text);
+        border: 1px solid var(--line);
+      }
+      .btn-light {
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--text);
+        border: 1px solid rgba(148, 163, 184, 0.25);
+      }
+
+      .hero {
+        padding: 72px 0 42px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 52px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(59, 130, 246, 0.08);
+        color: #1d4ed8;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 22px 0 18px;
+        font-size: clamp(2.8rem, 4vw, 4.5rem);
+        line-height: 0.98;
+        letter-spacing: -0.06em;
+      }
+
+      .lead {
+        color: var(--muted);
+        font-size: 1.1rem;
+        line-height: 1.7;
+        max-width: 620px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 28px;
+      }
+
+      .trust-row {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 32px;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .trust-row .item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .trust-row .dot {
+        width: 8px; height: 8px; border-radius: 50%; background: var(--success);
+        box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.08);
+      }
+
+      .hero-visual {
+        position: relative;
+      }
+
+      .dashboard-card {
+        background: rgba(255,255,255,0.9);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 32px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .dashboard-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--line);
+        background: #fbfcff;
+      }
+
+      .window-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .window-actions span {
+        width: 11px; height: 11px; border-radius: 50%; display: inline-block;
+      }
+      .window-actions span:nth-child(1){ background: #f87171; }
+      .window-actions span:nth-child(2){ background: #fbbf24; }
+      .window-actions span:nth-child(3){ background: #34d399; }
+
+      .dashboard-body {
+        padding: 24px;
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+
+      .mini-stat {
+        background: var(--panel-soft);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 16px 18px;
+      }
+      .mini-stat .label {
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+      }
+      .mini-stat .value {
+        font-size: 1.7rem;
+        font-weight: 800;
+        letter-spacing: -0.05em;
+      }
+      .mini-stat .delta {
+        display: inline-block;
+        margin-top: 8px;
+        color: var(--success);
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .session-panel {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 18px;
+      }
+
+      .attendance-box,
+      .summary-box {
+        background: var(--panel-soft);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 20px;
+      }
+
+      .attendance-head,
+      .summary-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+
+      .attendance-head h3,
+      .summary-head h3 {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .chip {
+        background: rgba(34,197,94,0.1);
+        color: #0f7b3e;
+        border-radius: 999px;
+        padding: 0.34rem 0.7rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .roster-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .roster-item {
+        display: grid;
+        grid-template-columns: 44px 1fr auto;
+        gap: 12px;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: white;
+        border: 1px solid rgba(148, 163, 184, 0.15);
+      }
+      .roster-item .roll {
+        width: 44px;
+        height: 28px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: #edf4ff;
+        color: #153e75;
+        font-size: 0.7rem;
+        font-weight: 800;
+      }
+      .roster-item .name {
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .roster-item .status {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #0f7b3e;
+        background: rgba(34,197,94,0.09);
+        border-radius: 999px;
+        padding: 0.4rem 0.7rem;
+      }
+      .attendance-box .status--late { color: #b45309; background: rgba(245,158,11,0.12); }
+
+      .summary-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+      .summary-item strong {
+        color: var(--text);
+        font-size: 1rem;
+      }
+      .mini-graph {
+        margin-top: 18px;
+        height: 128px;
+        border-radius: 16px;
+        background: linear-gradient(180deg, rgba(59,130,246,0.12), rgba(59,130,246,0.03));
+        position: relative;
+        overflow: hidden;
+      }
+      .mini-graph::before {
+        content: "";
+        position: absolute;
+        inset: 18px 14px 20px 14px;
+        background: linear-gradient(180deg, rgba(59,130,246,0.06), rgba(59,130,246,0.18));
+        clip-path: polygon(0 75%, 14% 60%, 26% 66%, 42% 45%, 60% 54%, 74% 35%, 100% 15%, 100% 100%, 0 100%);
+      }
+
+      .section {
+        padding: 32px 0 20px;
+      }
+
+      .section-heading {
+        text-align: center;
+        max-width: 760px;
+        margin: 0 auto 32px;
+      }
+      .section-heading h2 {
+        font-size: clamp(2rem, 2.8vw, 3rem);
+        letter-spacing: -0.05em;
+        margin: 10px 0 12px;
+      }
+      .section-heading p {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .feature-card {
+        background: rgba(255,255,255,0.74);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 10px 30px rgba(15,23,42,0.03);
+      }
+      .feature-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        font-size: 1.2rem;
+        color: white;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        margin-bottom: 18px;
+      }
+      .feature-card h3 {
+        margin: 0 0 12px;
+        font-size: 1.1rem;
+      }
+      .feature-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .showcase {
+        padding-top: 24px;
+      }
+
+      .showcase-panel {
+        background: linear-gradient(180deg, rgba(18,38,58,0.98), rgba(27,45,69,0.96));
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(15,23,42,0.14);
+      }
+
+      .showcase-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 22px 26px;
+        border-bottom: 1px solid rgba(148,163,184,0.2);
+      }
+      .showcase-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: white;
+        font-weight: 700;
+      }
+      .showcase-brand .brand-mark {
+        width: 28px; height: 28px; border-radius: 10px;
+      }
+      .showcase-badges {
+        display: flex;
+        gap: 8px;
+      }
+      .showcase-badges span {
+        background: rgba(255,255,255,0.08);
+        color: rgba(255,255,255,0.85);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 999px;
+        padding: 0.42rem 0.7rem;
+        font-size: 0.72rem;
+      }
+
+      .showcase-body {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 28px;
+        padding: 26px;
+      }
+
+      .showcase-table {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(148,163,184,0.2);
+        border-radius: 22px;
+        padding: 18px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        color: rgba(255,255,255,0.86);
+      }
+      th, td {
+        text-align: left;
+        padding: 12px 10px;
+        border-bottom: 1px solid rgba(148,163,184,0.12);
+      }
+      th {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.73rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      td {
+        font-size: 0.92rem;
+        font-weight: 500;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 0.32rem 0.62rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+      }
+      .tag.present { background: rgba(34,197,94,0.12); color: #7df0a7; }
+      .tag.absent { background: rgba(148,163,184,0.16); color: #dbe4f0; }
+
+      .showcase-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .status-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(148,163,184,0.18);
+        border-radius: 20px;
+        padding: 18px 18px 16px;
+      }
+      .status-card h4 {
+        margin: 0 0 16px;
+        color: rgba(255,255,255,0.9);
+        font-size: 0.82rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .ring {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 10px;
+        border-radius: 50%;
+        background: conic-gradient(#67e8f9 0 74%, rgba(255,255,255,0.1) 74% 100%);
+        display: grid;
+        place-items: center;
+      }
+      .ring-inner {
+        width: 82px; height: 82px; border-radius: 50%;
+        background: rgba(18,38,58,0.98); display: grid; place-items: center;
+        color: white; font-size: 1.2rem; font-weight: 800;
+      }
+      .progress-label {
+        text-align: center; color: rgba(255,255,255,0.7);
+      }
+
+      .metrics-section {
+        padding-top: 80px;
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 26px;
+      }
+
+      .metric-box {
+        background: rgba(255,255,255,0.82);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 26px 22px;
+      }
+      .metric-box .large {
+        font-size: clamp(2rem, 5vw, 2.8rem);
+        letter-spacing: -0.06em;
+        font-weight: 800;
+        margin: 10px 0 8px;
+      }
+      .metric-box p { margin: 0; color: var(--muted); line-height: 1.7; }
+
+      .cta-band {
+        padding: 72px 0 90px;
+      }
+      .cta-box {
+        background: linear-gradient(135deg, var(--primary), #1e3a5f 42%, var(--accent-2));
+        color: white;
+        border-radius: 28px;
+        padding: 34px 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        box-shadow: 0 30px 80px rgba(26, 54, 89, 0.25);
+      }
+      .cta-box h3 {
+        margin: 0 0 8px;
+        font-size: clamp(1.8rem, 2.8vw, 2.7rem);
+        letter-spacing: -0.05em;
+      }
+      .cta-box p {
+        margin: 0;
+        color: rgba(255,255,255,0.72);
+        line-height: 1.7;
+      }
+
+      .site-footer {
+        border-top: 1px solid rgba(148,163,184,0.2);
+        background: rgba(255,255,255,0.34);
+      }
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 26px 0 46px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      @media (max-width: 1024px) {
+        .hero-grid,
+        .session-panel,
+        .showcase-body,
+        .feature-grid,
+        .metrics-grid {
+          grid-template-columns: 1fr;
+        }
+        .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      @media (max-width: 760px) {
+        .nav { flex-wrap: wrap; gap: 14px; padding: 16px 0; }
+        .nav-links { width: 100%; justify-content: center; flex-wrap: wrap; }
+        .nav-cta { width: 100%; justify-content: center; }
+        .hero { padding-top: 42px; }
+        .feature-grid { grid-template-columns: 1fr; }
+        .cta-box { flex-direction: column; align-items: flex-start; }
+        .footer-inner { flex-direction: column; align-items: flex-start; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav">
+        <a href="#top" class="brand" aria-label="Atendex home">
+          <span class="brand-mark"><i class="fa-solid fa-check"></i></span>
+          Atendex
+        </a>
+
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#features">Features</a>
+          <a href="#dashboard">Dashboard</a>
+          <a href="#metrics">Metrics</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="nav-cta">
+          <a class="btn btn-light" href="#contact">Book demo</a>
+          <a class="btn btn-primary" href="#dashboard">Open app</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <div class="eyebrow"><i class="fa-solid fa-globe"></i> attend.atendex.com</div>
+            <h1>Attendance that feels effortless.</h1>
+            <p class="lead">
+              Atendex gives schools and teams a faster, smarter way to track presence,
+              review daily records, and act on attendance trends without the admin hassle.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#dashboard">Launch dashboard</a>
+              <a class="btn btn-secondary" href="#features">Explore features</a>
+            </div>
+
+            <div class="trust-row" aria-label="Trust indicators">
+              <div class="item"><span class="dot"></span> Trusted by education teams</div>
+              <div class="item"><span class="dot"></span> Real-time attendance overview</div>
+              <div class="item"><span class="dot"></span> Secure class history</div>
+            </div>
+          </div>
+
+          <div class="hero-visual" id="dashboard">
+            <div class="dashboard-card">
+              <div class="dashboard-topbar">
+                <div class="window-actions"><span></span><span></span><span></span></div>
+                <span style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">Today’s register</span>
+              </div>
+
+              <div class="dashboard-body">
+                <div class="stats-row">
+                  <div class="mini-stat">
+                    <div class="label">Class roster</div>
+                    <div class="value">64</div>
+                    <span class="delta">+6 this term</span>
+                  </div>
+                  <div class="mini-stat">
+                    <div class="label">Sessions</div>
+                    <div class="value">18</div>
+                    <span class="delta">+2 today</span>
+                  </div>
+                  <div class="mini-stat">
+                    <div class="label">Attendance</div>
+                    <div class="value">92%</div>
+                    <span class="delta">steady rise</span>
+                  </div>
+                </div>
+
+                <div class="session-panel">
+                  <div class="attendance-box">
+                    <div class="attendance-head">
+                      <h3>Class roster</h3>
+                      <span class="chip">Live</span>
+                    </div>
+                    <div class="roster-list" id="rosterList">
+                      <div class="roster-item">
+                        <div class="roll">851</div>
+                        <div class="name">Merub Fatima</div>
+                        <div class="status">Present</div>
+                      </div>
+                      <div class="roster-item">
+                        <div class="roll">852</div>
+                        <div class="name">Maryam Bibi</div>
+                        <div class="status">Present</div>
+                      </div>
+                      <div class="roster-item">
+                        <div class="roll">855</div>
+                        <div class="name">Ayesha Asghar</div>
+                        <div class="status status--late">Late</div>
+                      </div>
+                      <div class="roster-item">
+                        <div class="roll">860</div>
+                        <div class="name">Zoha Noor</div>
+                        <div class="status">Present</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="summary-box">
+                    <div class="summary-head">
+                      <h3>Overview</h3>
+                    </div>
+                    <div class="summary-list">
+                      <div class="summary-item"><span>Present</span><strong>58</strong></div>
+                      <div class="summary-item"><span>Late</span><strong>03</strong></div>
+                      <div class="summary-item"><span>Absent</span><strong>03</strong></div>
+                    </div>
+                    <div class="mini-graph" aria-hidden="true"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="features">
+        <div class="container">
+          <div class="section-heading">
+            <div class="eyebrow" style="margin: 0 auto; width: fit-content;">Built for daily control</div>
+            <h2>Everything you need to manage class attendance.</h2>
+            <p>Purpose-built for schools, departments, and teams that need clean records, quick checks, and better accountability.</p>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card">
+              <div class="feature-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+              <h3>Daily register</h3>
+              <p>Mark reports in seconds and keep every class session organized with clean, shareable attendance records.</p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div>
+              <h3>Live insights</h3>
+              <p>Track attendance trends with instant totals, percentages, and class-by-class overview for smarter decisions.</p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon"><i class="fa-solid fa-user-shield"></i></div>
+              <h3>Student history</h3>
+              <p>Every attendance record is saved and easy to review, helping you monitor participation and follow-up accurately.</p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+              <h3>Fast admin workflow</h3>
+              <p>Reduce repetition with quick status toggles, smart filters, and centralized class history for your team.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section showcase">
+        <div class="container">
+          <div class="showcase-panel">
+            <div class="showcase-header">
+              <div class="showcase-brand">
+                <span class="brand-mark"><i class="fa-solid fa-check"></i></span>
+                Atendex admin
+              </div>
+              <div class="showcase-badges">
+                <span>Daily attendance</span>
+                <span>Archive</span>
+                <span>Insights</span>
+              </div>
+            </div>
+
+            <div class="showcase-body">
+              <div class="showcase-table">
+                <table aria-label="Attendance register table">
+                  <thead>
+                    <tr>
+                      <th>Student</th>
+                      <th>Roll</th>
+                      <th>Course</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Merub Fatima</td>
+                      <td>851</td>
+                      <td>CS-101</td>
+                      <td><span class="tag present">Present</span></td>
+                    </tr>
+                    <tr>
+                      <td>Maryam Bibi</td>
+                      <td>852</td>
+                      <td>CS-101</td>
+                      <td><span class="tag present">Present</span></td>
+                    </tr>
+                    <tr>
+                      <td>Ayesha Asghar</td>
+                      <td>855</td>
+                      <td>CS-101</td>
+                      <td><span class="tag absent">Absent</span></td>
+                    </tr>
+                    <tr>
+                      <td>Zoha Noor</td>
+                      <td>860</td>
+                      <td>CS-101</td>
+                      <td><span class="tag present">Present</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="showcase-sidebar">
+                <div class="status-card">
+                  <h4>Attendance rate</h4>
+                  <div class="ring"><div class="ring-inner">74%</div></div>
+                  <div class="progress-label">Up from 68% last week</div>
+                </div>
+
+                <div class="status-card">
+                  <h4>Class status</h4>
+                  <div class="summary-list">
+                    <div class="summary-item"><span>Present</span><strong>26</strong></div>
+                    <div class="summary-item"><span>Absent</span><strong>4</strong></div>
+                    <div class="summary-item"><span>Late</span><strong>2</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section metrics-section" id="metrics">
+        <div class="container">
+          <div class="section-heading">
+            <div class="eyebrow" style="margin: 0 auto; width: fit-content;">Clarity at every level</div>
+            <h2>Designed for accurate reporting and faster follow-up.</h2>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <div style="color: var(--accent); font-weight: 700;">Sessions</div>
+              <div class="large">1,248</div>
+              <p>Log attendance across classrooms, departments, and programs with a single daily workflow.</p>
+            </div>
+
+            <div class="metric-box">
+              <div style="color: var(--success); font-weight: 700;">Accuracy</div>
+              <div class="large">96%</div>
+              <p>Reduce manual mistakes and get consistent updates with streamlined status tracking.</p>
+            </div>
+
+            <div class="metric-box">
+              <div style="color: var(--warning); font-weight: 700;">Time saved</div>
+              <div class="large">42%</div>
+              <p>Cut admin work with quick marking tools and a searchable archive of completed records.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-band">
+        <div class="container">
+          <div class="cta-box">
+            <div>
+              <h3>Make attendance simple.</h3>
+              <p>Take control of your daily register with a cleaner, smarter attendance workflow.</p>
+            </div>
+            <a class="btn btn-primary" href="#contact" style="background: white; color: var(--primary); box-shadow: none;">Start now</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="contact">
+      <div class="container footer-inner">
+        <div class="brand" style="font-size:1.1rem;">
+          <span class="brand-mark"><i class="fa-solid fa-check"></i></span>
+          Atendex
+        </div>
+
+        <div class="footer-links">
+          <a href="#features">Features</a>
+          <a href="#dashboard">Dashboard</a>
+          <a href="#metrics">Insights</a>
+          <a href="mailto:hello@atendex.com">hello@atendex.com</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const rosterData = [
+        { roll: '851', name: 'Merub Fatima', status: 'Present' },
+        { roll: '852', name: 'Maryam Bibi', status: 'Present' },
+        { roll: '855', name: 'Ayesha Asghar', status: 'Late' },
+        { roll: '860', name: 'Zoha Noor', status: 'Present' },
+        { roll: '867', name: 'Rabiya Batool', status: 'Present' },
+        { roll: '871', name: 'Iqra Shahzadi', status: 'Absent' }
+      ];
+
+      const rosterList = document.getElementById('rosterList');
+      if (rosterList) {
+        rosterList.innerHTML = rosterData.map((student) => `
+          <div class="roster-item">
+            <div class="roll">${student.roll}</div>
+            <div class="name">${student.name}</div>
+            <div class="status ${student.status === 'Late' ? 'status--late' : ''}">${student.status}</div>
+          </div>
+        `).join('');
+      }
+    </script>
+  </body>
+</html>
